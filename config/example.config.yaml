@@ -1,0 +1,7 @@
+env: "local"
+databaseHost: "localhost"
+databasePort: 5432
+databaseUser: "postgres"
+databaseName: "oggetto"
+databasePassword: "lolkek123"
+databaseSSLMode: "disable"
