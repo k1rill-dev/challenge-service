@@ -16,3 +16,14 @@ type AuthenticationChallenge struct {
 	IsTeam      bool      `gorm:"not null" json:"is_team"`
 	CreatorID   int64     `gorm:"not null" json:"creator_id"`
 }
+
+type AuthenticationParticipant struct {
+	ID          int64                   `gorm:"primaryKey;autoIncrement:true" json:"id"`
+	Status      string                  `gorm:"type:varchar(10);not null" json:"status"`
+	Progress    string                  `gorm:"type:jsonb;not null" json:"progress"`
+	Achievement string                  `gorm:"type:text;not null" json:"achievement"`
+	ChallengeID int64                   `gorm:"not null" json:"challenge_id"`
+	Challenge   AuthenticationChallenge `gorm:"foreignKey:ChallengeID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	UserID      int64                   `gorm:"not null" json:"creator_id"`
+	TeamID      int64                   `gorm:"not null" json:"team_id"`
+}

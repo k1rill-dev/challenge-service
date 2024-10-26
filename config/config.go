@@ -14,6 +14,7 @@ type Config struct {
 	DatabasePort     int    `yaml:"databasePort" env-default:"5432"`
 	DatabaseName     string `yaml:"databaseName" env-default:"postgres"`
 	DatabasePassword string `yaml:"databasePassword" env-default:"postgres"`
+	SecretKey        string `yaml:"secretKey" env-default:"secret-key"`
 }
 
 func fetchConfigPath(filename string) string {
