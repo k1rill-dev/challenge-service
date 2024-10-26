@@ -83,15 +83,6 @@ func (h *HTTPServer) Run() {
 	myGroup.Use(AuthMiddleware(h.cfg))
 	router.GET("/pingpong", h.challengesHandlers.Ping)
 
-	//router.POST("/lobbies", h.challengesHandlers.CreateLobby)
-	//router.GET("/lobbies/:lobbyId", h.lobbyHandlers.GetLobby)
-	//router.GET("/users/:userId/lobbies", h.lobbyHandlers.GetAllLobbiesFromUser)
-	//router.POST("/lobbies/:lobbyId/users", h.lobbyHandlers.AddUsersToLobby)
-	//router.DELETE("/lobbies/:lobbyId", h.lobbyHandlers.DeleteLobby)
-	//router.DELETE("/lobbies/:lobbyId/users/:userId", h.lobbyHandlers.RemoveUserFromLobby)
-	//router.PUT("/lobbies/:lobbyId", h.lobbyHandlers.UpdateLobby)
-	//router.GET("/lobbies/:lobbyId/users", h.lobbyHandlers.GetAllUsersFromLobby)
-
 	err := router.Run(":8000")
 	if err != nil {
 		panic(err)

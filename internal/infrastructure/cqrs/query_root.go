@@ -2,11 +2,10 @@ package cqrs
 
 import (
 	"context"
-	"github.com/google/uuid"
 )
 
 type Query interface {
-	GetAggregateID() uuid.UUID
+	GetAggregateID() int64
 }
 
 type QueryHandler[AbstractQuery Query] interface {
@@ -14,15 +13,15 @@ type QueryHandler[AbstractQuery Query] interface {
 }
 
 type BaseQuery struct {
-	AggregateID uuid.UUID
+	AggregateID int64
 }
 
-func NewBaseQuery(aggregateID uuid.UUID) BaseQuery {
+func NewBaseQuery(aggregateID int64) BaseQuery {
 	return BaseQuery{
 		AggregateID: aggregateID,
 	}
 }
 
-func (q BaseQuery) GetAggregateID() uuid.UUID {
+func (q BaseQuery) GetAggregateID() int64 {
 	return q.AggregateID
 }

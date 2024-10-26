@@ -2,11 +2,10 @@ package cqrs
 
 import (
 	"context"
-	"github.com/google/uuid"
 )
 
 type Command interface {
-	GetAggregateID() uuid.UUID
+	GetAggregateID() int64
 }
 
 type CommandHandler[AbstractCommand Command] interface {
@@ -14,13 +13,13 @@ type CommandHandler[AbstractCommand Command] interface {
 }
 
 type BaseCommand struct {
-	AggregateID uuid.UUID
+	AggregateID int64
 }
 
-func NewBaseCommand(aggregateID uuid.UUID) BaseCommand {
+func NewBaseCommand(aggregateID int64) BaseCommand {
 	return BaseCommand{AggregateID: aggregateID}
 }
 
-func (c BaseCommand) GetAggregateID() uuid.UUID {
+func (c BaseCommand) GetAggregateID() int64 {
 	return c.AggregateID
 }
