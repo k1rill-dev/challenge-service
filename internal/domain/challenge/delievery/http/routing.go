@@ -6,8 +6,8 @@ import (
 	"challenge-service/internal/domain/challenge/delievery/http/handlers"
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt"
-	"github.com/swaggo/files"       // swagger embedded files
-	"github.com/swaggo/gin-swagger" // gin-swagger middleware
+	"github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -84,38 +84,28 @@ func (h *HTTPServer) Run() {
 	router.Use(gin.Recovery())
 	router.GET("/pingpong", h.challengesHandlers.Ping)
 
-	// Группа маршрутов, защищенных AuthMiddleware
 	api := router.Group("/api")
 	api.Use(AuthMiddleware(h.cfg))
 
-	// Роуты для управления вызовами (challenges)
 	challenges := api.Group("/challenges")
 	{
-		// Создание нового вызова
 		challenges.POST("/", h.challengesHandlers.CreateChallenge)
 
-		// Получение всех вызовов
 		challenges.GET("/", h.challengesHandlers.GetAllChallenges)
 
-		// Обновление вызова
 		challenges.PUT("/:id", h.challengesHandlers.UpdateChallenge)
 
-		// Удаление вызова
 		challenges.DELETE("/:id", h.challengesHandlers.DeleteChallenge)
 
-		// Получение вызовов пользователя
 		challenges.GET("/user/:user_id", h.challengesHandlers.GetAllChallengesFromUser)
 
-		// Получение вызовов команды
 		challenges.GET("/team/:team_id", h.challengesHandlers.GetAllChallengesFromTeam)
 	}
 	docs.SwaggerInfo.BasePath = "/"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	// Запуск сервера
 	err := router.Run(":8000")
 	if err != nil {
 		h.log.Error("Failed to run server:", err)
 		panic(err)
 	}
-	//"D:\GoProjects\challenge-service\internal\domain\challenge\delievery\http\handlers"
 }
