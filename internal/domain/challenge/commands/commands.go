@@ -11,6 +11,7 @@ type CreateChallengeCommand struct {
 	Icon        string    `gorm:"type:varchar(255);not null" json:"icon"`
 	Image       string    `gorm:"type:varchar(255);not null" json:"image"`
 	Description string    `gorm:"type:text;not null" json:"description"`
+	StartDate   time.Time `json:"start_date"`
 	EndDate     time.Time `gorm:"type:timestamptz;not null" json:"end_date"`
 	Type        string    `gorm:"type:varchar(10);not null" json:"type"` // семейный, личный, общий(групповой)
 	IsTeam      bool      `gorm:"not null" json:"is_team"`
@@ -42,6 +43,7 @@ type UpdateChallengeCommand struct {
 	Icon        *string    `json:"icon,omitempty"`
 	Image       *string    `json:"image,omitempty"`
 	Description *string    `json:"description,omitempty"`
+	StartDate   *time.Time `json:"start_date"`
 	EndDate     *time.Time `json:"end_date,omitempty"`
 	Type        *string    `json:"type,omitempty"` // семейный, личный, общий(групповой)
 	IsTeam      *bool      `json:"is_team,omitempty"`

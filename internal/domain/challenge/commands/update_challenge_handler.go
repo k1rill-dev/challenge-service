@@ -32,10 +32,8 @@ func (h *UpdateChallengeHandler) Handle(ctx context.Context, command cqrs.Comman
 	if !ok {
 		return nil, errors.New("invalid command")
 	}
-
-	// Create a challenge entity with only the fields that are provided
 	challenge := entity.AuthenticationChallenge{
-		ID: updateChallengeCommand.ChallengeID, // Assuming this is the ID of the challenge to update
+		ID: updateChallengeCommand.ChallengeID,
 	}
 
 	if updateChallengeCommand.Name != nil {
@@ -49,6 +47,9 @@ func (h *UpdateChallengeHandler) Handle(ctx context.Context, command cqrs.Comman
 	}
 	if updateChallengeCommand.Description != nil {
 		challenge.Description = *updateChallengeCommand.Description
+	}
+	if updateChallengeCommand.StartDate != nil {
+		challenge.StartDate = *updateChallengeCommand.StartDate
 	}
 	if updateChallengeCommand.EndDate != nil {
 		challenge.EndDate = *updateChallengeCommand.EndDate
