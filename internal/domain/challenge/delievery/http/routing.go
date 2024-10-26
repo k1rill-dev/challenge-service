@@ -84,22 +84,22 @@ func (h *HTTPServer) Run() {
 	router.Use(gin.Recovery())
 	router.GET("/pingpong", h.challengesHandlers.Ping)
 
-	api := router.Group("/api")
+	api := router.Group("/")
 	api.Use(AuthMiddleware(h.cfg))
 
-	challenges := api.Group("/challenges")
+	challenges := api.Group("/")
 	{
-		challenges.POST("/", h.challengesHandlers.CreateChallenge)
+		challenges.POST("/challenges", h.challengesHandlers.CreateChallenge)
 
-		challenges.GET("/", h.challengesHandlers.GetAllChallenges)
+		challenges.GET("/challenges", h.challengesHandlers.GetAllChallenges)
 
-		challenges.PUT("/:id", h.challengesHandlers.UpdateChallenge)
+		challenges.PUT("/challenges/:id", h.challengesHandlers.UpdateChallenge)
 
-		challenges.DELETE("/:id", h.challengesHandlers.DeleteChallenge)
+		challenges.DELETE("/challenges/:id", h.challengesHandlers.DeleteChallenge)
 
-		challenges.GET("/user/:user_id", h.challengesHandlers.GetAllChallengesFromUser)
+		challenges.GET("/challenges/user/:user_id", h.challengesHandlers.GetAllChallengesFromUser)
 
-		challenges.GET("/team/:team_id", h.challengesHandlers.GetAllChallengesFromTeam)
+		challenges.GET("/challenges/team/:team_id", h.challengesHandlers.GetAllChallengesFromTeam)
 	}
 	docs.SwaggerInfo.BasePath = "/"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
