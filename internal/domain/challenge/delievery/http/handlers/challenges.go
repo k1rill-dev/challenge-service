@@ -205,7 +205,7 @@ func (h *ChallengesHandlers) DeleteChallenge(c *gin.Context) {
 func (h *ChallengesHandlers) GetAllChallengesFromUser(c *gin.Context) {
 	userID := c.Param("user_id")
 	query := queries.NewGetAllChallengesFromUserQuery(rand.Int64(), userID)
-	handler, err := h.handlerFabric.GetCommandHandler(query)
+	handler, err := h.handlerFabric.GetQueryHandler(query)
 	if err != nil {
 		h.log.Error("Error getting query handler:", log.Err(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -232,7 +232,7 @@ func (h *ChallengesHandlers) GetAllChallengesFromUser(c *gin.Context) {
 func (h *ChallengesHandlers) GetAllChallengesFromTeam(c *gin.Context) {
 	teamID := c.Param("team_id")
 	query := queries.NewGetAllChallengesFromTeamQuery(rand.Int64(), teamID)
-	handler, err := h.handlerFabric.GetCommandHandler(query)
+	handler, err := h.handlerFabric.GetQueryHandler(query)
 	if err != nil {
 		h.log.Error("Error getting query handler:", log.Err(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
