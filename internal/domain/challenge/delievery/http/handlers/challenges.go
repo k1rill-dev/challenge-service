@@ -78,7 +78,7 @@ func (h *ChallengesHandlers) CreateChallenge(c *gin.Context) {
 	}
 	randomID := rand.Int64()
 	command := commands.NewCreateChallengeCommand(randomID, &challenge.Name, &challenge.Icon, &challenge.Description,
-		&challenge.Interests, &challenge.EndDate, &challenge.Type, &challenge.IsTeam, &challenge.CreatorID)
+		&challenge.EndDate, &challenge.Type, &challenge.IsTeam, &challenge.CreatorID)
 
 	handler, err := h.handlerFabric.GetCommandHandler(command)
 	if err != nil {
@@ -105,7 +105,7 @@ func (h *ChallengesHandlers) CreateChallenge(c *gin.Context) {
 // @Router       /challenges [get]
 func (h *ChallengesHandlers) GetAllChallenges(c *gin.Context) {
 	query := queries.NewFindAllQuery()
-	handler, err := h.handlerFabric.GetCommandHandler(query)
+	handler, err := h.handlerFabric.GetQueryHandler(query)
 	if err != nil {
 		h.log.Error("Error getting query handler:", log.Err(err))
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -127,7 +127,7 @@ func (h *ChallengesHandlers) GetAllChallenges(c *gin.Context) {
 // @Accept       json
 // @Produce      json
 // @Param        id         path     int64                      true  "Challenge ID"
-// @Param        challenge  body     commands.UpdateChallengeCommand true  "Updated Challenge Data"
+// @Param        challenge  body     entity.AuthenticationChallenge true  "Updated Challenge Data"
 // @Success      200  {object}  interface{}
 // @Failure      400  {object}  ErrorResponse
 // @Failure      500  {object}  ErrorResponse

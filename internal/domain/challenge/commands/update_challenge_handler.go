@@ -50,9 +50,6 @@ func (h *UpdateChallengeHandler) Handle(ctx context.Context, command cqrs.Comman
 	if updateChallengeCommand.Description != nil {
 		challenge.Description = *updateChallengeCommand.Description
 	}
-	if updateChallengeCommand.Interests != nil {
-		challenge.Interests = *updateChallengeCommand.Interests
-	}
 	if updateChallengeCommand.EndDate != nil {
 		challenge.EndDate = *updateChallengeCommand.EndDate
 	}

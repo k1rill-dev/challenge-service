@@ -85,7 +85,7 @@ func (h *HTTPServer) Run() {
 	router.GET("/pingpong", h.challengesHandlers.Ping)
 
 	api := router.Group("/")
-	api.Use(AuthMiddleware(h.cfg))
+	//api.Use(AuthMiddleware(h.cfg))
 
 	challenges := api.Group("/")
 	{

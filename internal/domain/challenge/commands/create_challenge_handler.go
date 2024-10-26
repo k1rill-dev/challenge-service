@@ -38,7 +38,6 @@ func (c *CreateChallengeHandler) Handle(ctx context.Context, command cqrs.Comman
 		Icon:        createChallengeCommand.Icon,
 		Image:       createChallengeCommand.Image,
 		Description: createChallengeCommand.Description,
-		Interests:   createChallengeCommand.Interests,
 		EndDate:     createChallengeCommand.EndDate,
 		Type:        createChallengeCommand.Type,
 		IsTeam:      createChallengeCommand.IsTeam,
