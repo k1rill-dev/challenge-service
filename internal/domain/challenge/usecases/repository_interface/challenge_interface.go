@@ -12,7 +12,7 @@ type AuthenticationChallengeParams struct {
 
 type ChallengeRepositoryInterface interface {
 	Create(challenge entity.AuthenticationChallenge) (*entity.AuthenticationChallenge, error)
-	Delete(challenge entity.AuthenticationChallenge) error
+	Delete(challengeID int64) error
 	Update(challenge entity.AuthenticationChallenge) (*entity.AuthenticationChallenge, error)
 	FindAll() ([]*entity.AuthenticationChallenge, error)
 	FindByParams(params *AuthenticationChallengeParams) ([]*entity.AuthenticationChallenge, error)

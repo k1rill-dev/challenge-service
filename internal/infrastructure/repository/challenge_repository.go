@@ -33,7 +33,7 @@ func (c *challengeRepository) Create(challenge entity.AuthenticationChallenge) (
 func (c *challengeRepository) Update(challenge entity.AuthenticationChallenge) (*entity.AuthenticationChallenge, error) {
 	return nil, nil
 }
-func (c *challengeRepository) Delete(challenge entity.AuthenticationChallenge) error {
+func (c *challengeRepository) Delete(challengeID int64) error {
 	return nil
 }
 func (c *challengeRepository) FindByParams(params *interfaceRepo.AuthenticationChallengeParams) ([]*entity.AuthenticationChallenge, error) {
