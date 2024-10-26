@@ -42,7 +42,7 @@ func main() {
 	challengeRepo := repository.NewChallengeRepository(cfg, log, dbClient)
 	handlerFabric := fabric.NewHandlerFabric()
 	initializeHandlers(handlerFabric, log, cfg, challengeRepo)
-	challengeHandlers := handlers.NewChallengesHandlers(cfg, log, handlerFabric)
+	challengeHandlers := handlers.NewChallengesHandlers(cfg, log, handlerFabric, challengeRepo)
 	httpServer := http.NewHTTPServer(cfg, log, challengeHandlers)
 	httpServer.Run()
 }

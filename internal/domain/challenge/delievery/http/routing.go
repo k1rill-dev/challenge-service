@@ -109,7 +109,7 @@ func (h *HTTPServer) Run() {
 	}
 	docs.SwaggerInfo.BasePath = "/"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	err := router.Run(":8000")
+	err := router.Run(":8004")
 	if err != nil {
 		h.log.Error("Failed to run server:", err)
 		panic(err)
