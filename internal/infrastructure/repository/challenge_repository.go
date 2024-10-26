@@ -7,6 +7,7 @@ import (
 	"challenge-service/internal/infrastructure/lib/log"
 	"gorm.io/gorm"
 	"log/slog"
+	"math/rand/v2"
 )
 
 type challengeRepository struct {
@@ -86,7 +87,9 @@ func (c *challengeRepository) FindByParams(params *interfaceRepo.AuthenticationC
 // Получение всех вызовов пользователя по userID
 func (c *challengeRepository) GetAllChallengesFromUser(userID string) ([]*entity.AuthenticationChallenge, error) {
 	var challenges []*entity.AuthenticationChallenge
-	if err := c.db.Where("creator_id = ?", userID).Find(&challenges).Error; err != nil {
+	if err := c.db.Joins("JOIN authentication_participants ON authentication_participants.challenge_id = authentication_challenges.id").
+		Where("authentication_participants.user_id = ?", userID).
+		Find(&challenges).Error; err != nil {
 		c.log.Error("failed to fetch user challenges", log.Err(err))
 		return nil, err
 	}
@@ -103,4 +106,47 @@ func (c *challengeRepository) GetAllChallengesFromTeam(teamID string) ([]*entity
 		return nil, err
 	}
 	return challenges, nil
+}
+
+func (c *challengeRepository) RegisterUserOnChallenge(userID int64,
+	challenge entity.AuthenticationChallenge) (*entity.AuthenticationParticipant, error) {
+	var par entity.AuthenticationParticipant
+	par = entity.AuthenticationParticipant{
+		ID:          rand.Int64(),
+		Status:      "In Progress",
+		Achievement: challenge.Name,
+		ChallengeID: challenge.ID,
+		UserID:      userID,
+	}
+	if err := c.db.Create(&par).Error; err != nil {
+		c.log.Error("failed to create challenge response", log.Err(err))
+		return nil, err
+	}
+	return &par, nil
+}
+
+func (c *challengeRepository) RegisterTeamOnChallenge(teamID int64,
+	challenge entity.AuthenticationChallenge) (*entity.AuthenticationParticipant, error) {
+	var par entity.AuthenticationParticipant
+	par = entity.AuthenticationParticipant{
+		ID:          rand.Int64(),
+		Status:      "In Progress",
+		Achievement: challenge.Name,
+		ChallengeID: challenge.ID,
+		TeamID:      teamID,
+	}
+	if err := c.db.Create(&par).Error; err != nil {
+		c.log.Error("failed to create challenge response", log.Err(err))
+		return nil, err
+	}
+	return &par, nil
+}
+
+func (c *challengeRepository) CloseChallenge(challengeID int64) (*entity.AuthenticationChallenge, error) {
+	var challenge entity.AuthenticationChallenge
+	if err := c.db.Model(&challenge).Where("challenge_id = ?", challengeID).Update("is_finished", true).Error; err != nil {
+		c.log.Error("failed to close challenge", log.Err(err))
+		return nil, err
+	}
+	return &challenge, nil
 }

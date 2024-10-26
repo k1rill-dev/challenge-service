@@ -100,6 +100,12 @@ func (h *HTTPServer) Run() {
 		challenges.GET("/challenges/user/:user_id", h.challengesHandlers.GetAllChallengesFromUser)
 
 		challenges.GET("/challenges/team/:team_id", h.challengesHandlers.GetAllChallengesFromTeam)
+
+		challenges.POST("/challenges/user/register", h.challengesHandlers.RegisterUser)
+
+		challenges.POST("/challenges/team/register/:team_id", h.challengesHandlers.RegisterTeam)
+
+		challenges.POST("/challenges/close/:challenge_id", h.challengesHandlers.CloseChallenge)
 	}
 	docs.SwaggerInfo.BasePath = "/"
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

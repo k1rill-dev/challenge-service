@@ -14,6 +14,7 @@ type AuthenticationChallenge struct {
 	EndDate     time.Time `gorm:"type:timestamptz;not null" json:"end_date"`
 	Type        string    `gorm:"type:varchar(10);not null" json:"type"` // семейный, личный, общий(групповой)
 	IsTeam      bool      `gorm:"not null" json:"is_team"`
+	IsFinished  bool      `gorm:"not null" json:"is_finished"`
 	CreatorID   int64     `gorm:"not null" json:"creator_id"`
 }
 

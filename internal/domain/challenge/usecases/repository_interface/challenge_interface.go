@@ -18,4 +18,8 @@ type ChallengeRepositoryInterface interface {
 	FindByParams(params *AuthenticationChallengeParams) ([]*entity.AuthenticationChallenge, error)
 	GetAllChallengesFromUser(userID string) ([]*entity.AuthenticationChallenge, error)
 	GetAllChallengesFromTeam(teamID string) ([]*entity.AuthenticationChallenge, error)
+
+	RegisterUserOnChallenge(userID int64, challenge entity.AuthenticationChallenge) (*entity.AuthenticationParticipant, error)
+	RegisterTeamOnChallenge(teamID int64, challenge entity.AuthenticationChallenge) (*entity.AuthenticationParticipant, error)
+	CloseChallenge(challengeID int64) (*entity.AuthenticationChallenge, error)
 }

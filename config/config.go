@@ -15,6 +15,8 @@ type Config struct {
 	DatabaseName     string `yaml:"databaseName" env-default:"postgres"`
 	DatabasePassword string `yaml:"databasePassword" env-default:"postgres"`
 	SecretKey        string `yaml:"secretKey" env-default:"secret-key"`
+	TgMessageURL     string `yaml:"tgMessageURL" env-default:"https://t.me/%s"`
+	S3Url            string `yaml:"S3Url" env-default:"https://s3.amazonaws.com/"`
 }
 
 func fetchConfigPath(filename string) string {

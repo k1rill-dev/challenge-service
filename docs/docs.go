@@ -50,7 +50,7 @@ const docTemplate = `{
             "post": {
                 "description": "Creates a new challenge with the provided data",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -68,6 +68,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/entity.AuthenticationChallenge"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "Image File",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -81,6 +88,82 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/close/{challenge_id}": {
+            "post": {
+                "description": "This method closes challenge and send message to winner",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Close challenge",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Challenge ID",
+                        "name": "challenge_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.AuthenticationChallenge"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/team/register/{team_id}": {
+            "post": {
+                "description": "Register team on challenge",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Register team on challenge",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Team ID",
+                        "name": "team_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.AuthenticationParticipant"
+                            }
                         }
                     },
                     "500": {
@@ -118,6 +201,35 @@ const docTemplate = `{
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/entity.AuthenticationChallenge"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/challenges/user/register": {
+            "post": {
+                "description": "Register user on challenge",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Register user on challenge",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.AuthenticationParticipant"
                             }
                         }
                     },
@@ -172,7 +284,7 @@ const docTemplate = `{
             "put": {
                 "description": "Updates the details of an existing challenge",
                 "consumes": [
-                    "application/json"
+                    "multipart/form-data"
                 ],
                 "produces": [
                     "application/json"
@@ -193,10 +305,21 @@ const docTemplate = `{
                         "description": "Updated Challenge Data",
                         "name": "challenge",
                         "in": "body",
-                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/commands.UpdateChallengeCommand"
+                            "$ref": "#/definitions/entity.AuthenticationChallenge"
                         }
+                    },
+                    {
+                        "type": "file",
+                        "description": "New Image File",
+                        "name": "image",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "New Icon File",
+                        "name": "icon",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -277,45 +400,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "commands.UpdateChallengeCommand": {
-            "type": "object",
-            "properties": {
-                "aggregateID": {
-                    "type": "integer"
-                },
-                "challenge_id": {
-                    "type": "integer"
-                },
-                "creator_id": {
-                    "type": "integer"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "end_date": {
-                    "type": "string"
-                },
-                "icon": {
-                    "type": "string"
-                },
-                "image": {
-                    "type": "string"
-                },
-                "interests": {
-                    "type": "string"
-                },
-                "is_team": {
-                    "type": "boolean"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "type": {
-                    "description": "семейный, личный, общий(групповой)",
-                    "type": "string"
-                }
-            }
-        },
         "entity.AuthenticationChallenge": {
             "type": "object",
             "properties": {
@@ -337,8 +421,8 @@ const docTemplate = `{
                 "image": {
                     "type": "string"
                 },
-                "interests": {
-                    "type": "string"
+                "is_finished": {
+                    "type": "boolean"
                 },
                 "is_team": {
                     "type": "boolean"
@@ -346,9 +430,41 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "start_date": {
+                    "type": "string"
+                },
                 "type": {
                     "description": "семейный, личный, общий(групповой)",
                     "type": "string"
+                }
+            }
+        },
+        "entity.AuthenticationParticipant": {
+            "type": "object",
+            "properties": {
+                "achievement": {
+                    "type": "string"
+                },
+                "challenge": {
+                    "$ref": "#/definitions/entity.AuthenticationChallenge"
+                },
+                "challenge_id": {
+                    "type": "integer"
+                },
+                "creator_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "progress": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "team_id": {
+                    "type": "integer"
                 }
             }
         },

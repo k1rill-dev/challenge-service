@@ -1,30 +1,4 @@
 definitions:
-  commands.UpdateChallengeCommand:
-    properties:
-      aggregateID:
-        type: integer
-      challenge_id:
-        type: integer
-      creator_id:
-        type: integer
-      description:
-        type: string
-      end_date:
-        type: string
-      icon:
-        type: string
-      image:
-        type: string
-      interests:
-        type: string
-      is_team:
-        type: boolean
-      name:
-        type: string
-      type:
-        description: семейный, личный, общий(групповой)
-        type: string
-    type: object
   entity.AuthenticationChallenge:
     properties:
       creator_id:
@@ -39,15 +13,36 @@ definitions:
         type: integer
       image:
         type: string
-      interests:
-        type: string
+      is_finished:
+        type: boolean
       is_team:
         type: boolean
       name:
         type: string
+      start_date:
+        type: string
       type:
         description: семейный, личный, общий(групповой)
         type: string
+    type: object
+  entity.AuthenticationParticipant:
+    properties:
+      achievement:
+        type: string
+      challenge:
+        $ref: '#/definitions/entity.AuthenticationChallenge'
+      challenge_id:
+        type: integer
+      creator_id:
+        type: integer
+      id:
+        type: integer
+      progress:
+        type: string
+      status:
+        type: string
+      team_id:
+        type: integer
     type: object
   handlers.DeleteChallengeResponse:
     properties:
@@ -94,7 +89,7 @@ paths:
       - Challenges
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Creates a new challenge with the provided data
       parameters:
       - description: Challenge Data
@@ -103,6 +98,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/entity.AuthenticationChallenge'
+      - description: Image File
+        in: formData
+        name: image
+        required: true
+        type: file
       produces:
       - application/json
       responses:
@@ -148,7 +148,7 @@ paths:
       - Challenges
     put:
       consumes:
-      - application/json
+      - multipart/form-data
       description: Updates the details of an existing challenge
       parameters:
       - description: Challenge ID
@@ -159,9 +159,16 @@ paths:
       - description: Updated Challenge Data
         in: body
         name: challenge
-        required: true
         schema:
-          $ref: '#/definitions/commands.UpdateChallengeCommand'
+          $ref: '#/definitions/entity.AuthenticationChallenge'
+      - description: New Image File
+        in: formData
+        name: image
+        type: file
+      - description: New Icon File
+        in: formData
+        name: icon
+        type: file
       produces:
       - application/json
       responses:
@@ -177,6 +184,31 @@ paths:
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Update an existing challenge
+      tags:
+      - Challenges
+  /challenges/close/{challenge_id}:
+    post:
+      description: This method closes challenge and send message to winner
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: challenge_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.AuthenticationChallenge'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Close challenge
       tags:
       - Challenges
   /challenges/team/{team_id}:
@@ -204,6 +236,31 @@ paths:
       summary: Get challenges for a team
       tags:
       - Challenges
+  /challenges/team/register/{team_id}:
+    post:
+      description: Register team on challenge
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.AuthenticationParticipant'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Register team on challenge
+      tags:
+      - Challenges
   /challenges/user/{user_id}:
     get:
       description: Retrieves all challenges associated with a specific user
@@ -227,6 +284,25 @@ paths:
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
       summary: Get challenges for a user
+      tags:
+      - Challenges
+  /challenges/user/register:
+    post:
+      description: Register user on challenge
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.AuthenticationParticipant'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Register user on challenge
       tags:
       - Challenges
   /pingpong:
