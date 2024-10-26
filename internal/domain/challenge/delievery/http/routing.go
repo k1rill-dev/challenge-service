@@ -79,12 +79,38 @@ func (h *HTTPServer) Run() {
 	router := gin.Default()
 
 	router.Use(gin.Recovery())
-	myGroup := router.Group("/")
-	myGroup.Use(AuthMiddleware(h.cfg))
 	router.GET("/pingpong", h.challengesHandlers.Ping)
 
+	// Группа маршрутов, защищенных AuthMiddleware
+	api := router.Group("/api")
+	api.Use(AuthMiddleware(h.cfg))
+
+	// Роуты для управления вызовами (challenges)
+	challenges := api.Group("/challenges")
+	{
+		// Создание нового вызова
+		challenges.POST("/", h.challengesHandlers.CreateChallenge)
+
+		// Получение всех вызовов
+		challenges.GET("/", h.challengesHandlers.GetAllChallenges)
+
+		// Обновление вызова
+		challenges.PUT("/:id", h.challengesHandlers.UpdateChallenge)
+
+		// Удаление вызова
+		challenges.DELETE("/:id", h.challengesHandlers.DeleteChallenge)
+
+		// Получение вызовов пользователя
+		challenges.GET("/user/:user_id", h.challengesHandlers.GetAllChallengesFromUser)
+
+		// Получение вызовов команды
+		challenges.GET("/team/:team_id", h.challengesHandlers.GetAllChallengesFromTeam)
+	}
+
+	// Запуск сервера
 	err := router.Run(":8000")
 	if err != nil {
+		h.log.Error("Failed to run server:", err)
 		panic(err)
 	}
 }
