@@ -1,0 +1,245 @@
+definitions:
+  commands.UpdateChallengeCommand:
+    properties:
+      aggregateID:
+        type: integer
+      challenge_id:
+        type: integer
+      creator_id:
+        type: integer
+      description:
+        type: string
+      end_date:
+        type: string
+      icon:
+        type: string
+      image:
+        type: string
+      interests:
+        type: string
+      is_team:
+        type: boolean
+      name:
+        type: string
+      type:
+        description: семейный, личный, общий(групповой)
+        type: string
+    type: object
+  entity.AuthenticationChallenge:
+    properties:
+      creator_id:
+        type: integer
+      description:
+        type: string
+      end_date:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      interests:
+        type: string
+      is_team:
+        type: boolean
+      name:
+        type: string
+      type:
+        description: семейный, личный, общий(групповой)
+        type: string
+    type: object
+  handlers.DeleteChallengeResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handlers.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handlers.PingResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: This is a sample server for managing challenges.
+  title: Challenge Service API
+  version: "1.0"
+paths:
+  /challenges:
+    get:
+      description: Fetches a list of all challenges
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.AuthenticationChallenge'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Retrieve all challenges
+      tags:
+      - Challenges
+    post:
+      consumes:
+      - application/json
+      description: Creates a new challenge with the provided data
+      parameters:
+      - description: Challenge Data
+        in: body
+        name: challenge
+        required: true
+        schema:
+          $ref: '#/definitions/entity.AuthenticationChallenge'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entity.AuthenticationChallenge'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Create a new challenge
+      tags:
+      - Challenges
+  /challenges/{id}:
+    delete:
+      description: Removes a challenge by its ID
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.DeleteChallengeResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Delete a challenge
+      tags:
+      - Challenges
+    put:
+      consumes:
+      - application/json
+      description: Updates the details of an existing challenge
+      parameters:
+      - description: Challenge ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Challenge Data
+        in: body
+        name: challenge
+        required: true
+        schema:
+          $ref: '#/definitions/commands.UpdateChallengeCommand'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Update an existing challenge
+      tags:
+      - Challenges
+  /challenges/team/{team_id}:
+    get:
+      description: Retrieves all challenges associated with a specific team
+      parameters:
+      - description: Team ID
+        in: path
+        name: team_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.AuthenticationChallenge'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get challenges for a team
+      tags:
+      - Challenges
+  /challenges/user/{user_id}:
+    get:
+      description: Retrieves all challenges associated with a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/entity.AuthenticationChallenge'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      summary: Get challenges for a user
+      tags:
+      - Challenges
+  /pingpong:
+    get:
+      description: Responds with a "pong" message to check service availability
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.PingResponse'
+      summary: Check service health
+      tags:
+      - Health
+swagger: "2.0"

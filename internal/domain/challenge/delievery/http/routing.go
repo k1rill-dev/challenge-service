@@ -2,9 +2,12 @@ package http
 
 import (
 	"challenge-service/config"
+	"challenge-service/docs"
 	"challenge-service/internal/domain/challenge/delievery/http/handlers"
 	"github.com/gin-gonic/gin"
 	jwt "github.com/golang-jwt/jwt"
+	"github.com/swaggo/files"       // swagger embedded files
+	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"log/slog"
 	"net/http"
 	"strings"
@@ -106,11 +109,13 @@ func (h *HTTPServer) Run() {
 		// Получение вызовов команды
 		challenges.GET("/team/:team_id", h.challengesHandlers.GetAllChallengesFromTeam)
 	}
-
+	docs.SwaggerInfo.BasePath = "/"
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// Запуск сервера
 	err := router.Run(":8000")
 	if err != nil {
 		h.log.Error("Failed to run server:", err)
 		panic(err)
 	}
+	//"D:\GoProjects\challenge-service\internal\domain\challenge\delievery\http\handlers"
 }
